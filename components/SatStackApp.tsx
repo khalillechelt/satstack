@@ -16,8 +16,18 @@ const RANGE_LABELS: Record<Range, string> = {
 };
 
 export default function SatStackApp() {
-  const [sats, setSats] = useState(1_000_000);
+  const [sats, setSats] = useState(() => {
+    if (typeof window === "undefined") return 1_000_000;
+    const saved = localStorage.getItem("satstack-sats");
+    const parsed = saved ? parseInt(saved, 10) : NaN;
+    return isNaN(parsed) || parsed < 0 ? 1_000_000 : parsed;
+  });
   const [range, setRange] = useState<Range>("1M");
+
+  // Persist sats to localStorage whenever the value changes
+  useEffect(() => {
+    localStorage.setItem("satstack-sats", String(sats));
+  }, [sats]);
   const [priceHistory, setPriceHistory] = useState<PricePoint[]>([]);
   const [currentPrice, setCurrentPrice] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
