@@ -1,4 +1,4 @@
-import { getBtcHistory, type Range } from "@/lib/coingecko";
+import { getCachedBtcHistory, type Range } from "@/lib/coingecko";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -6,7 +6,7 @@ export async function GET(request: Request) {
   const range = (searchParams.get("range") ?? "1M") as Range;
 
   try {
-    const history = await getBtcHistory(range);
+    const history = await getCachedBtcHistory(range);
     return NextResponse.json({ history });
   } catch {
     return NextResponse.json(

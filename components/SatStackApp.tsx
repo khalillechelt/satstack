@@ -197,7 +197,7 @@ export default function SatStackApp() {
             color: "#222",
           }}
         >
-          price via Strike · history via CoinGecko
+          data via CoinGecko
         </span>
         <span
           style={{

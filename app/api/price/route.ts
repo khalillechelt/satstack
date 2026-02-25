@@ -1,9 +1,9 @@
-import { getBtcPrice } from "@/lib/strike";
+import { getCachedBtcPrice } from "@/lib/coingecko";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const price = await getBtcPrice();
+    const price = await getCachedBtcPrice();
     return NextResponse.json({ price });
   } catch {
     return NextResponse.json(
