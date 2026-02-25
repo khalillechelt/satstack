@@ -4,7 +4,12 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import SatChart from "./SatChart";
 import RangeSelector from "./RangeSelector";
 import SatInput from "./SatInput";
-import { type Range } from "@/lib/coingecko";
+import CurrencySelector from "./CurrencySelector";
+import {
+  type Range,
+  type CurrencyCode,
+  formatCurrency,
+} from "@/lib/coingecko";
 
 type PricePoint = { date: number; price: number };
 
@@ -20,16 +25,25 @@ export default function SatStackApp() {
   // Restore from localStorage after hydration to avoid the SSR mismatch.
   const [sats, setSats] = useState(1_000_000);
   const [range, setRange] = useState<Range>("1M");
+  const [currency, setCurrency] = useState<CurrencyCode>("usd");
 
   useEffect(() => {
-    const saved = localStorage.getItem("satstack-sats");
-    const parsed = saved ? parseInt(saved, 10) : NaN;
+    const savedSats = localStorage.getItem("satstack-sats");
+    const parsed = savedSats ? parseInt(savedSats, 10) : NaN;
     if (!isNaN(parsed) && parsed >= 0) setSats(parsed);
+
+    const savedCurrency = localStorage.getItem("satstack-currency");
+    if (savedCurrency) setCurrency(savedCurrency as CurrencyCode);
   }, []);
 
   useEffect(() => {
     localStorage.setItem("satstack-sats", String(sats));
   }, [sats]);
+
+  useEffect(() => {
+    localStorage.setItem("satstack-currency", currency);
+  }, [currency]);
+
   const [priceHistory, setPriceHistory] = useState<PricePoint[]>([]);
   const [currentPrice, setCurrentPrice] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
@@ -48,7 +62,7 @@ export default function SatStackApp() {
   const fetchHistory = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/history?range=${range}`);
+      const res = await fetch(`/api/history?range=${range}&currency=${currency}`);
       const data = await res.json();
       setPriceHistory(data.history ?? []);
     } catch {
@@ -56,17 +70,17 @@ export default function SatStackApp() {
     } finally {
       setLoading(false);
     }
-  }, [range]);
+  }, [range, currency]);
 
   const fetchCurrentPrice = useCallback(async () => {
     try {
-      const res = await fetch("/api/price");
+      const res = await fetch(`/api/price?currency=${currency}`);
       const data = await res.json();
       if (data.price) setCurrentPrice(data.price);
     } catch {
       // Silently fall back — chart still works from CoinGecko history
     }
-  }, []);
+  }, [currency]);
 
   useEffect(() => {
     fetchHistory();
@@ -90,6 +104,8 @@ export default function SatStackApp() {
       : null;
 
   const isUp = pctChange !== null && pctChange >= 0;
+
+  const fmt = (v: number) => formatCurrency(v, currency);
 
   return (
     <main className="min-h-screen bg-black text-white flex flex-col max-w-2xl mx-auto">
@@ -118,10 +134,7 @@ export default function SatStackApp() {
           >
             BTC{" "}
             <span style={{ color: "#fff" }}>
-              $
-              {currentPrice.toLocaleString("en-US", {
-                maximumFractionDigits: 0,
-              })}
+              {formatCurrency(currentPrice, currency)}
             </span>
           </span>
         )}
@@ -141,11 +154,7 @@ export default function SatStackApp() {
                 fontVariantNumeric: "tabular-nums",
               }}
             >
-              $
-              {currentValue.toLocaleString("en-US", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
+              {fmt(currentValue)}
             </div>
             {pctChange !== null && (
               <div
@@ -174,19 +183,20 @@ export default function SatStackApp() {
               color: "#1a1a1a",
             }}
           >
-            $—
+            —
           </div>
         )}
       </div>
 
       {/* Chart */}
       <div style={{ flex: 1, minHeight: 220, paddingInline: 0 }}>
-        <SatChart data={chartData} loading={loading} />
+        <SatChart data={chartData} loading={loading} formatValue={fmt} />
       </div>
 
-      {/* Range Selector */}
-      <div className="px-6 py-4">
+      {/* Range + Currency row */}
+      <div className="px-6 py-4 flex items-center justify-between">
         <RangeSelector value={range} onChange={setRange} />
+        <CurrencySelector value={currency} onChange={setCurrency} />
       </div>
 
       {/* Divider */}

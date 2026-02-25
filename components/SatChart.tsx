@@ -18,9 +18,11 @@ type TooltipEntry = {
 function CustomTooltip({
   active,
   payload,
+  formatValue,
 }: {
   active?: boolean;
   payload?: TooltipEntry[];
+  formatValue: (v: number) => string;
 }) {
   if (!active || !payload?.length) return null;
   const point = payload[0].payload;
@@ -56,11 +58,7 @@ function CustomTooltip({
           margin: "4px 0 0",
         }}
       >
-        $
-        {value.toLocaleString("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })}
+        {formatValue(value)}
       </p>
     </div>
   );
@@ -69,12 +67,13 @@ function CustomTooltip({
 type Props = {
   data: ChartPoint[];
   loading: boolean;
+  formatValue: (v: number) => string;
 };
 
-export default function SatChart({ data, loading }: Props) {
+export default function SatChart({ data, loading, formatValue }: Props) {
   if (loading) {
     return (
-      <div className="w-full h-full min-h-[200px] flex items-end justify-center pb-4">
+      <div className="w-full h-full min-h-50 flex items-end justify-center pb-4">
         <span
           style={{
             fontFamily: "var(--font-geist-mono)",
@@ -108,7 +107,7 @@ export default function SatChart({ data, loading }: Props) {
         </defs>
         <YAxis domain={[min - padding, max + padding]} hide />
         <Tooltip
-          content={<CustomTooltip />}
+          content={<CustomTooltip formatValue={formatValue} />}
           cursor={{ stroke: "#222", strokeWidth: 1 }}
         />
         <Area
