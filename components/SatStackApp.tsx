@@ -16,15 +16,17 @@ const RANGE_LABELS: Record<Range, string> = {
 };
 
 export default function SatStackApp() {
-  const [sats, setSats] = useState(() => {
-    if (typeof window === "undefined") return 1_000_000;
-    const saved = localStorage.getItem("satstack-sats");
-    const parsed = saved ? parseInt(saved, 10) : NaN;
-    return isNaN(parsed) || parsed < 0 ? 1_000_000 : parsed;
-  });
+  // Always start with the default so server and client render identically.
+  // Restore from localStorage after hydration to avoid the SSR mismatch.
+  const [sats, setSats] = useState(1_000_000);
   const [range, setRange] = useState<Range>("1M");
 
-  // Persist sats to localStorage whenever the value changes
+  useEffect(() => {
+    const saved = localStorage.getItem("satstack-sats");
+    const parsed = saved ? parseInt(saved, 10) : NaN;
+    if (!isNaN(parsed) && parsed >= 0) setSats(parsed);
+  }, []);
+
   useEffect(() => {
     localStorage.setItem("satstack-sats", String(sats));
   }, [sats]);
