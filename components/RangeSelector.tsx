@@ -20,7 +20,7 @@ export default function RangeSelector({ value, onChange }: Props) {
           className={`text-xs px-3 py-1.5 transition-all cursor-pointer ${
             value === r
               ? "bg-white text-black"
-              : "text-neutral-600 hover:text-white border border-neutral-900 hover:border-neutral-700"
+              : "text-neutral-400 hover:text-white border border-neutral-900 hover:border-neutral-700"
           }`}
         >
           {r}

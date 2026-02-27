@@ -36,7 +36,7 @@ export default function SatInput({ value, onChange }: Props) {
         style={{
           fontFamily: "var(--font-geist-mono)",
           fontSize: "11px",
-          color: "#333",
+          color: "#888",
           letterSpacing: "0.12em",
           textTransform: "uppercase",
           display: "block",
@@ -74,7 +74,7 @@ export default function SatInput({ value, onChange }: Props) {
           style={{
             fontFamily: "var(--font-geist-mono)",
             fontSize: "13px",
-            color: "#333",
+            color: "#888",
             flexShrink: 0,
           }}
         >
@@ -85,7 +85,7 @@ export default function SatInput({ value, onChange }: Props) {
         style={{
           fontFamily: "var(--font-geist-mono)",
           fontSize: "11px",
-          color: "#2a2a2a",
+          color: "#777",
           marginTop: "8px",
         }}
       >

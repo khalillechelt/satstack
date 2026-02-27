@@ -129,7 +129,7 @@ export default function SatStackApp() {
             style={{
               fontFamily: "var(--font-geist-mono)",
               fontSize: "11px",
-              color: "#333",
+              color: "#888",
             }}
           >
             BTC{" "}
@@ -161,7 +161,7 @@ export default function SatStackApp() {
                 style={{
                   fontFamily: "var(--font-geist-mono)",
                   fontSize: "12px",
-                  color: isUp ? "#fff" : "#666",
+                  color: isUp ? "#fff" : "#888",
                   marginTop: "8px",
                   display: "flex",
                   alignItems: "center",
@@ -170,7 +170,7 @@ export default function SatStackApp() {
               >
                 <span>{isUp ? "↑" : "↓"}</span>
                 <span>{Math.abs(pctChange).toFixed(2)}%</span>
-                <span style={{ color: "#333" }}>{RANGE_LABELS[range]}</span>
+                <span style={{ color: "#888" }}>{RANGE_LABELS[range]}</span>
               </div>
             )}
           </>
@@ -180,7 +180,7 @@ export default function SatStackApp() {
               fontFamily: "var(--font-geist-mono)",
               fontSize: "clamp(36px, 6vw, 56px)",
               fontWeight: 300,
-              color: "#1a1a1a",
+              color: "#777",
             }}
           >
             —
@@ -216,7 +216,7 @@ export default function SatStackApp() {
           style={{
             fontFamily: "var(--font-geist-mono)",
             fontSize: "10px",
-            color: "#222",
+            color: "#777",
           }}
         >
           data via CoinGecko
@@ -225,7 +225,7 @@ export default function SatStackApp() {
           style={{
             fontFamily: "var(--font-geist-mono)",
             fontSize: "10px",
-            color: "#1a1a1a",
+            color: "#777",
           }}
         >
           1 BTC = 100,000,000 sats

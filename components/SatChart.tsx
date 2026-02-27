@@ -40,7 +40,7 @@ function CustomTooltip({
         style={{
           fontFamily: "var(--font-geist-mono)",
           fontSize: "11px",
-          color: "#555",
+          color: "#888",
           margin: 0,
         }}
       >
@@ -78,7 +78,7 @@ export default function SatChart({ data, loading, formatValue }: Props) {
           style={{
             fontFamily: "var(--font-geist-mono)",
             fontSize: "11px",
-            color: "#2a2a2a",
+            color: "#777",
             letterSpacing: "0.1em",
           }}
           className="animate-pulse"

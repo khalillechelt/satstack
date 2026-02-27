@@ -14,7 +14,7 @@ export default function CurrencySelector({ value, onChange }: Props) {
       onChange={(e) => onChange(e.target.value as CurrencyCode)}
       style={{
         background: "transparent",
-        color: "#555",
+        color: "#888",
         border: "1px solid #1a1a1a",
         fontFamily: "var(--font-geist-mono)",
         fontSize: "11px",
